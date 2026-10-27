@@ -2,7 +2,7 @@
   "id": "./",
   "name": "Estudo Musical",
   "short_name": "Estudo Musical",
-  "description": "Escalas, acordes, harmonia e treino de ouvido com instrumentos interativos.",
+  "description": "Escalas, acordes, harmonia, treino de ouvido e canto com instrumentos interativos, prova de nível e plano de estudo.",
   "lang": "pt-BR",
   "start_url": "./index.html",
   "scope": "./",

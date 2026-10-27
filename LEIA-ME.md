@@ -1,4 +1,15 @@
-# Estudo Musical
+# Estudo Musical — versão 2 (Canto, Prova de nível e Metodologias)
+
+## Novidades da versão 2
+
+- **Hoje** (nova tela inicial): nível de instrumento e de canto, sessão do dia, sequência de dias e atalhos.
+- **Canto**: teoria (respiração, apoio, ressonância, registros, afinação, dicção), biblioteca com 21 exercícios em 7 categorias, rotinas de 5, 10 e 20 minutos por nível, técnica e saúde vocal.
+- **Modelo de demonstração**: o piano toca a referência; o piano-roll/karaokê mostra cada nota e a vogal; a respiração tem animação de inspirar/segurar/soltar. Controles de andamento, nota inicial, transposição de meio tom, direção, repetição e acorde guia.
+- **Microfone (opcional)**: com permissão, mostra a linha da sua afinação sobre as notas e uma pontuação (% do tempo a até ±50 cents). Funciona apenas em HTTPS ou em `localhost`/`127.0.0.1`. Sem permissão, tudo continua funcionando com guia sonoro e animação. O áudio não é gravado nem enviado.
+- **Prova de nível**: trilha de instrumento (piano, violão, baixo, ukulele ou cavaquinho) e trilha vocal. Tudo é medido dentro do aplicativo: teoria, percepção, ritmo, afinação, extensão e sustentação. Sem microfone, use autoavaliação, a seleção manual e o cronômetro. O resultado mostra o nível (Iniciante, Básico, Intermediário ou Avançado) e o detalhamento por competência. Ele fica guardado no navegador, com histórico, e a prova pode ser refeita. A experiência declarada limita o nível de forma conservadora.
+- **Meu plano**: metodologia de 4 a 8 semanas conforme o nível. Cada sessão diária tem blocos de aquecimento, técnica, repertório, percepção e teoria. Os botões abrem diretamente o módulo certo. Há checklist, sequência de dias e critérios para avançar ou refazer a prova. Se houver desconforto frequente na voz, o plano é cauteloso (até 20 min) e mostra um alerta de saúde.
+- A classificação vocal é **aproximada**. Este aplicativo não substitui professor, fonoaudiólogo ou otorrinolaringologista. Rouquidão por mais de 2 semanas, dor ou perda de voz: procure avaliação.
+
 
 Versão responsiva criada a partir de `estudo-musical.html`, fornecido pelo usuário. O arquivo original em Downloads foi preservado. As fórmulas musicais e os recursos existentes foram reaproveitados.
 
@@ -35,8 +46,15 @@ Para testar localmente no computador, com Python instalado, execute `python -m h
 - `assets/engine.js`: motor musical original, com ajustes limitados de estado, áudio e eventos de integração.
 - `assets/base.css`: estilos e fontes musicais incorporados do original.
 - `assets/app.css`, `assets/app.js`: nova interface e melhorias progressivas.
-- O gerador `../build_music.py` e `../music-shell.html` permitem reconstruir o HTML independente e a página publicada, mantendo as duas versões iguais. O caminho de origem está no gerador.
-- Para publicar uma atualização, incremente `VERSION` em `sw.js`. A nova versão aguarda o fechamento das abas antigas para ativar. Não use o mesmo nome de cache para uma publicação diferente.
+- `assets/ext.js`: núcleo dos módulos novos (áudio, navegação `go()`, armazenamento, níveis e instrumentos).
+- `assets/pitch.js`: detecção de altura (YIN) e microfone.
+- `assets/vocal-dados.js`, `assets/vocal.js`: conteúdo e tela do Canto (exercícios, rotinas, demonstração).
+- `assets/prova.js`: prova de nível. `assets/plano.js`: metodologias, plano e tela Hoje.
+- `assets/ext.css`: estilos dos módulos novos, no mesmo visual.
+- Os scripts novos carregam **antes** de `engine.js`, que lê `window.__musExt` para desenhar as seções Hoje, Canto, Prova de nível e Meu plano.
+- Dados no navegador (localStorage): `estudoMusicalVocal`, `estudoMusicalProva`, `estudoMusicalPlano`, além das preferências originais.
+- Para reconstruir o HTML independente: `python3 ../ferramentas/build_standalone.py . ../estudo-musical.html`. O script incorpora no HTML os mesmos CSS/JS desta pasta.
+- Versão atual do cache: `estudo-musical-v2-20261027-1`. Para publicar uma atualização, incremente `VERSION` em `sw.js` e inclua novos arquivos na lista `FILES`. A nova versão aguarda o fechamento das abas antigas para ativar. Não use o mesmo nome de cache para uma publicação diferente.
 
 ## Validação
 

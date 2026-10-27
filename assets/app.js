@@ -6,6 +6,7 @@
   const music = window.__mus;
   if (!music) return;
   const sectionInfo = {
+    hoje: ['☀', 'Hoje', 'SEU ESTUDO DE HOJE', 'Seu nível, a sessão do dia e atalhos para começar a praticar em segundos.'],
     tom: ['◷', 'Tonalidades', 'ENCONTRE O SEU TOM', 'Explore o ciclo de quintas, as armaduras e as relações entre tonalidades.'],
     esc: ['♬', 'Escalas', 'EXPLORAR E OUVIR', 'Escolha uma escala, ouça as notas e encontre cada posição no instrumento.'],
     mod: ['≋', 'Modos gregos', 'OUTRAS CORES PARA O MESMO TOM', 'Compare os sete modos e ouça as notas que dão identidade a cada um.'],
@@ -13,8 +14,20 @@
     acd: ['♮', 'Acordes', 'MONTE E EXPERIMENTE', 'Explore fórmulas, inversões e posições. Toque no teclado para identificar acordes.'],
     int: ['◉', 'Intervalos', 'ESCUTE COM ATENÇÃO', 'Conheça as distâncias entre as notas e pratique o reconhecimento de ouvido.'],
     prog: ['⇢', 'Progressões', 'COLOQUE A HARMONIA EM MOVIMENTO', 'Ouça sequências de acordes de diferentes estilos, transpostas para o seu tom.'],
-    glos: ['▤', 'Glossário', 'CONSULTE QUANDO PRECISAR', 'Encontre o significado dos termos usados durante o estudo.']
+    glos: ['▤', 'Glossário', 'CONSULTE QUANDO PRECISAR', 'Encontre o significado dos termos usados durante o estudo.'],
+    vocal: ['◉', 'Canto', 'TÉCNICA VOCAL E AQUECIMENTO', 'Aprenda a técnica, aqueça com rotinas guiadas e acompanhe o modelo de demonstração com piano e microfone opcional.'],
+    prova: ['✎', 'Prova de nível', 'DESCUBRA POR ONDE COMEÇAR', 'Uma avaliação rápida de teoria, percepção, ritmo e técnica para montar o seu plano de estudo.'],
+    plano: ['☑', 'Meu plano', 'METODOLOGIA DO SEU NÍVEL', 'Plano semanal com sessões diárias, checklist de progresso e critérios para avançar.']
   };
+  const ext = () => window.__musExt || {};
+  const isExt = () => document.body.classList.contains('ext-sec');
+  function quickPlay() {
+    music.unlock();
+    if (!isExt()) { music.play(); return; }
+    const mod = ext()[music.S.sec];
+    if (mod && typeof mod.play === 'function') mod.play();
+    else toast('Nesta seção, use os botões de cada atividade para ouvir. Para tocar escalas e acordes, abra um assunto da biblioteca.');
+  }
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
   let toastTimer, lastSection = music.S.sec, pendingInstall = null;
   let returnFocus = null, menuReturnFocus = null;
@@ -169,7 +182,7 @@
     }
   }
   function updateDock() {
-    const focus = music.focus();
+    const focus = isExt() ? { title: ext().focusText } : music.focus();
     $('#transport-focus').textContent = focus?.title || 'Pronto para ouvir';
     $('#transport-bpm').textContent = music.S.bpm;
     $('#docktog').textContent = music.S.dock ? 'Recolher ↑' : 'Expandir ↓';
@@ -179,8 +192,11 @@
     markButtons();
   }
   const navigationIcons = sectionInfo;
+  const vocalTab = $('#tabs button[data-sec="vocal"]');
+  if (vocalTab && !$('#tabs .nav-label')) { const navLabel = document.createElement('p'); navLabel.className = 'nav-label'; navLabel.textContent = 'CANTO E METODOLOGIA'; vocalTab.before(navLabel); }
   $$('#tabs button').forEach(button => {
     const entry = navigationIcons[button.dataset.sec];
+    if (!entry) return;
     const icon = document.createElement('span'); icon.className = 'nav-icon'; icon.textContent = entry[0]; icon.setAttribute('aria-hidden','true');
     const label = document.createElement('span'); label.textContent = entry[1];
     button.replaceChildren(icon,label);
@@ -195,8 +211,11 @@
   $('#settings-open').addEventListener('click',() => showDialog('#settings-dialog'));
   $('#transport-metro').addEventListener('click',() => { showDialog('#settings-dialog'); $('#bpm').focus(); });
   $('#show-instrument').addEventListener('click',showInstrument);
-  $('#mobile-instrument').addEventListener('click',showInstrument);
-  $('#quick-play').addEventListener('click',() => { music.unlock(); music.play(); });
+  $('#mobile-instrument').addEventListener('click',() => {
+    if (isExt()) { window.__musExt?.core?.go('esc', { dock: true }); return; }
+    showInstrument();
+  });
+  $('#quick-play').addEventListener('click',quickPlay);
   $('.brand').addEventListener('click', event => { event.preventDefault(); closeMenu(); window.scrollTo({top:0,behavior:reducedMotion?'instant':'smooth'}); });
   document.addEventListener('click',event => {
     if (event.target.closest('[data-help]')) showDialog('#help-dialog');
@@ -230,7 +249,7 @@
       event.preventDefault(); event.target.dispatchEvent(new MouseEvent('click',{bubbles:true})); return;
     }
     if (event.code === 'Space' && !interactive && !$('dialog[open]') && !document.body.classList.contains('menu-open')) {
-      event.preventDefault(); music.unlock(); music.play();
+      event.preventDefault(); quickPlay();
     }
   });
   document.addEventListener('visibilitychange',() => { if(document.hidden) music.stop(); });
