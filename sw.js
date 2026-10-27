@@ -1,7 +1,7 @@
 /* Atualize VERSION ao publicar novos arquivos. Uma versão completa é armazenada
    antes da ativação. Sem skipWaiting: nenhuma troca de arquivos durante o estudo. */
-const VERSION = 'estudo-musical-v2-20261027-1';
-const FILES = ['./', './index.html', './assets/base.css', './assets/app.css', './assets/ext.css', './assets/ext.js', './assets/pitch.js', './assets/vocal-dados.js', './assets/vocal.js', './assets/prova.js', './assets/plano.js', './assets/engine.js', './assets/app.js', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/icon-maskable.png'];
+const VERSION = 'estudo-musical-v2-20261027-2';
+const FILES = ['./', './index.html', './assets/base.css', './assets/app.css', './assets/ext.css', './assets/ext.js', './assets/pitch.js', './assets/vocal-dados.js', './assets/vocal.js', './assets/prova.js', './assets/plano.js', './assets/acordes.js', './assets/engine.js', './assets/app.js', './manifest.webmanifest', './assets/icon.svg', './assets/icon-192.png', './assets/icon-512.png', './assets/icon-maskable.png'];
 const ALLOWED = new Set(FILES.map(file => new URL(file, self.registration.scope).href));
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(VERSION).then(cache => cache.addAll(FILES.map(file => new Request(file, { cache: 'reload' })))));
